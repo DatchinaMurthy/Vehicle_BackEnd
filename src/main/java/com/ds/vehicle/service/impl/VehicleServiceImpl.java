@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -36,12 +37,14 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public Vehicle Update(Vehicle vehicle, long id) {
         Vehicle updateVehicle=new Vehicle();
-        vehicleRepository.findById(id);
-        updateVehicle.setMake(vehicle.getMake());
-        updateVehicle.setModel(vehicle.getModel());
-        updateVehicle.setVin(vehicle.getVin());
-        updateVehicle.setYear(vehicle.getYear());
-        vehicleRepository.save(updateVehicle);
+        Optional<Vehicle> checkVehicle=vehicleRepository.findById(id);
+        if(checkVehicle.isPresent()){
+            updateVehicle.setMake(vehicle.getMake());
+            updateVehicle.setModel(vehicle.getModel());
+            updateVehicle.setVin(vehicle.getVin());
+            updateVehicle.setYear(vehicle.getYear());
+            vehicleRepository.saveAndFlush(updateVehicle);
+        }
         return updateVehicle;
     }
 
